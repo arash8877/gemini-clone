@@ -1,0 +1,62 @@
+import "./Main.css";
+import { assets } from "../../assets/assets";
+
+const Main = () => {
+  return (
+    <div className="main">
+      <div className="nav">
+        <p>Gemini</p>
+        <img className="user-icon" src={assets.user_icon} alt="user-icon" />
+      </div>
+      <div className="main-container">
+        <div className="green">
+          <p>
+            <span>Hello, Arash</span>
+          </p>
+          <p>How can I help you?</p>
+        </div>
+        <div className="cards">
+          <div className="card">
+            <p>What are the most popular JavaScript libraries?</p>
+            <img src={assets.compass_icon} alt="" />
+          </div>
+          <div className="card">
+            <p>Briefly explain the React.js</p>
+            <img src={assets.bulb_icon} alt="" />
+          </div>
+          <div className="card">
+            <p>What is the virtual DOM concept in React?</p>
+            <img src={assets.message_icon} alt="" />
+          </div>
+          <div className="card">
+            <p>What is the state management in React?</p>
+            <img src={assets.code_icon} alt="" />
+          </div>
+        </div>
+
+
+
+        
+        <div className="main-bottom">
+          <div className="search-box">
+            <input type="text" placeholder="Enter a prompt here" />
+            <div>
+              <img src={assets.gallery_icon} alt="gallery-icon" />
+              <img src={assets.mic_icon} alt="mic-icon" />
+              <img src={assets.send_icon} alt="send-icon" />
+            </div>
+          </div>
+          <p className="bottom-info">
+            Gemini may give inaccurate or inappropriate information, including about people, so
+            double-check responses. Your feedback makes Gemini Apps more helpful and safe
+          </p>
+        </div>
+
+
+
+      </div>
+    </div>
+  );
+};
+
+export default Main;
