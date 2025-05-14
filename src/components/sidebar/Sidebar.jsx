@@ -1,36 +1,40 @@
-import React from "react";
+import { useState } from "react";
 import "./Sidebar.css";
 import { assets } from "../../assets/assets";
 
 const Sidebar = () => {
+  const [extended, setExtended] = useState(false);
+
   return (
     <div className="sidebar">
       <div className="top">
-        <img className="menu" src={assets.menu_icon} alt="burger-icon" />
+        <img onClick={()=> setExtended(prev=>!prev)} className="menu" src={assets.menu_icon} alt="burger-icon" />
         <div className="new-chat">
           <img src={assets.plus_icon} alt="plus-icon" />
-          <p>New chat</p>
+          {extended ? <p>New Chat</p> : null}
         </div>
-        <div className="recent">
+        {extended ? (   
+          <div className="recent">
             <p className="recent-title">Recent</p>
             <div className="recent-entry">
-                <img src={assets.message_icon} alt="message-icon" />
-                <p>What is react ...</p>
+              <img src={assets.message_icon} alt="message-icon" />
+              <p>What is react ...</p>
             </div>
-        </div>
+          </div>
+        ) : null}
       </div>
       <div className="bottom">
         <div className="bottom-item recent-title">
-            <img src={assets.question_icon} alt="question-icon" />
-            <p>Help</p>
+          <img src={assets.question_icon} alt="question-icon" />
+          {extended ? <p>Help</p> : null}
         </div>
         <div className="bottom-item recent-title">
-            <img src={assets.history_icon} alt="history-icon" />
-            <p>Activity</p>
+          <img src={assets.history_icon} alt="history-icon" />
+          {extended ?<p>Activity</p> : null}
         </div>
         <div className="bottom-item recent-title">
-            <img src={assets.setting_icon} alt="setting -icon" />
-            <p>Settings</p>
+          <img src={assets.setting_icon} alt="setting -icon" />
+          {extended ? <p>Settings</p> : null}
         </div>
       </div>
     </div>
