@@ -1,25 +1,41 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import "./Sidebar.css";
 import { assets } from "../../assets/assets";
+import { Context } from "../../context/Context";
 
 const Sidebar = () => {
   const [extended, setExtended] = useState(false);
+  const { onSent, prevPrompts, setRecentPrompt, setInput } = useContext(Context);
+
+  const loadPrompt = async (prompt) => {
+    setRecentPrompt(prompt);
+    await onSent(prompt);
+  };
 
   return (
     <div className="sidebar">
       <div className="top">
-        <img onClick={()=> setExtended(prev=>!prev)} className="menu" src={assets.menu_icon} alt="burger-icon" />
+        <img
+          onClick={() => setExtended((prev) => !prev)}
+          className="menu"
+          src={assets.menu_icon}
+          alt="burger-icon"
+        />
         <div className="new-chat">
           <img src={assets.plus_icon} alt="plus-icon" />
           {extended ? <p>New Chat</p> : null}
         </div>
-        {extended ? (   
+        {extended ? (
           <div className="recent">
             <p className="recent-title">Recent</p>
-            <div className="recent-entry">
-              <img src={assets.message_icon} alt="message-icon" />
-              <p>What is react ...</p>
-            </div>
+            {prevPrompts.map((item, index) => {
+              return (
+                <div onClick={() => loadPrompt(item)} className="recent-entry">
+                  <img src={assets.message_icon} alt="message-icon" />
+                  <p>{item.slice(0, 18)} ...</p>
+                </div>
+              );
+            })}
           </div>
         ) : null}
       </div>
@@ -30,7 +46,7 @@ const Sidebar = () => {
         </div>
         <div className="bottom-item recent-title">
           <img src={assets.history_icon} alt="history-icon" />
-          {extended ?<p>Activity</p> : null}
+          {extended ? <p>Activity</p> : null}
         </div>
         <div className="bottom-item recent-title">
           <img src={assets.setting_icon} alt="setting -icon" />

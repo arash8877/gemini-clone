@@ -21,8 +21,15 @@ const ContextProvider = ({ children }) => {
     setResultData("");
     setLoading(true);
     setShowResult(true);
-    setRecentPrompt(input);
-    const response = await runChat(input);
+    let response;
+    if (prompt !== undefined) {
+      response = await runChat(prompt);
+      setRecentPrompt(prompt);
+    } else {
+      setPrevPrompts((prev) => [...prev, input]);
+      setRecentPrompt(input);
+      response = await runChat(input);
+    }
     // remove the ** in the response
     let responseArray = response.split("**");
     let newResponse = "";
