@@ -17,10 +17,22 @@ const ContextProvider = ({ children }) => {
     setShowResult(true);
     setRecentPrompt(input);
     const response = await runChat(input);
-    setResultData(response);
+    // remove the ** in the response
+    let responseArray = response.split("**");
+    let newResponse = "";
+    for (let i = 0; i < responseArray.length; i++) {
+      if (i === 0 || i % 2 !== 1) {
+        newResponse += responseArray[i];
+      } else {
+        newResponse += "<b>" + responseArray[i] + "</b>";
+      }
+    }
+     // remove the * in the response
+     let newResponse2 = newResponse.split("*").join("</br>");
+    //-----------------------------
+    setResultData(newResponse2);
     setLoading(false);
     setInput("");
-
   };
 
   const contextValue = {
@@ -35,7 +47,6 @@ const ContextProvider = ({ children }) => {
     loading,
     resultData,
   };
-
 
   return <Context.Provider value={contextValue}>{children}</Context.Provider>;
 };
