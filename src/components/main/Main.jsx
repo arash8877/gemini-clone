@@ -10,33 +10,35 @@ const Main = () => {
   return (
     <div className="main">
       <div className="nav">
-        <p>Gemini</p>
-        <img className="user-icon" src={assets.user_icon} alt="user-icon" />
+        <p>ArashGemini</p>
+        <div className="user-icon-container">
+          <img className="user-icon" src={assets.user_icon} alt="user-icon" />
+        </div>
       </div>
       <div className="main-container">
         {!showResult ? (
           <>
             <div className="green">
               <p>
-                <span>Hello, Arash</span>
+                <span>Welcome to ArashGemini.</span>
               </p>
               <p>How can I help you?</p>
             </div>
             <div className="cards">
               <div className="card">
-                <p>What are the most popular JavaScript libraries?</p>
+                <p>What is the virtual DOM in React.js?</p>
                 <img src={assets.compass_icon} alt="" />
               </div>
               <div className="card">
-                <p>Briefly explain the React.js</p>
+                <p>What’s the weather like in Copenhagen today?</p>
                 <img src={assets.bulb_icon} alt="" />
               </div>
               <div className="card">
-                <p>What is the virtual DOM concept in React?</p>
+                <p>How do I create a moment worth remembering every single day?</p>
                 <img src={assets.message_icon} alt="" />
               </div>
               <div className="card">
-                <p>What is the state management in React?</p>
+                <p>Debug and optimize the code snippet below?</p>
                 <img src={assets.code_icon} alt="" />
               </div>
             </div>
@@ -44,7 +46,9 @@ const Main = () => {
         ) : (
           <div className="result">
             <div className="result-title">
-              <img src={assets.code_icon} alt="code-icon" />
+              <div className="user-icon-container">
+                <img className="user-icon" src={assets.user_icon} alt="user-icon" />
+              </div>
               <p>{recentPrompt}</p>
             </div>
             <div className="result-data">
