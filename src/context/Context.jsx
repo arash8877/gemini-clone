@@ -11,6 +11,12 @@ const ContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [resultData, setResultData] = useState("");
 
+  const delayPara = (index, nextWord) => {
+    setTimeout(function () {
+      setResultData((prev) => prev + nextWord);
+    }, 75 * index);
+  };
+
   const onSent = async (prompt) => {
     setResultData("");
     setLoading(true);
@@ -27,10 +33,16 @@ const ContextProvider = ({ children }) => {
         newResponse += "<b>" + responseArray[i] + "</b>";
       }
     }
-     // remove the * in the response
-     let newResponse2 = newResponse.split("*").join("</br>");
+    // remove the * in the response
+    let newResponse2 = newResponse.split("*").join("</br>");
     //-----------------------------
-    setResultData(newResponse2);
+    // make type effect for the response
+    let newResponseArray = newResponse2.split(" ");
+    for (let i = 0; i < newResponseArray.length; i++) {
+      const nextWord = newResponseArray[i];
+      delayPara(i, nextWord + " ");
+    }
+    //---------------------------
     setLoading(false);
     setInput("");
   };
