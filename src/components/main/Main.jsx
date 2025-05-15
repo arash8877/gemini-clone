@@ -1,7 +1,14 @@
 import "./Main.css";
+import { useContext } from "react";
 import { assets } from "../../assets/assets";
+import Context from "../../context/Context";
 
 const Main = () => {
+  const { onSent, recentPrompt, showResult, loading, resultData, setInput, input } =
+    useContext(Context);
+
+
+    
   return (
     <div className="main">
       <div className="nav">
@@ -34,9 +41,6 @@ const Main = () => {
           </div>
         </div>
 
-
-
-
         <div className="main-bottom">
           <div className="search-box">
             <input type="text" placeholder="Enter a prompt here" />
@@ -47,13 +51,10 @@ const Main = () => {
             </div>
           </div>
           <p className="bottom-info">
-            Gemini may give inaccurate information, so
-            double-check responses. Your feedback makes Gemini Apps more helpful and safe.
+            Gemini may give inaccurate information, so double-check responses. Your feedback makes
+            Gemini Apps more helpful and safe.
           </p>
         </div>
-
-
-
       </div>
     </div>
   );
