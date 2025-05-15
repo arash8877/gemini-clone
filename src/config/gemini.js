@@ -14,6 +14,7 @@ async function runChat(input) {
     ],
   });
   console.log(response.text);
+  return response.text;
 }
 
 export default runChat;
