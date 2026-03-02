@@ -9,17 +9,22 @@ const ai = new GoogleGenAI({
  * Main chat function
  * Uses Named Export to ensure compatibility with Context.jsx
  */
-export async function runChat(input) {
+export async function runChat(input, turns = []) {
   // Check for API Key early
   if (!import.meta.env.VITE_GEMINI_API_KEY) {
     throw new Error("Missing VITE_GEMINI_API_KEY in your .env file.");
   }
 
   try {
+    const historyContents = turns.flatMap((turn) => [
+      { role: "user", parts: [{ text: turn.prompt }] },
+      { role: "model", parts: [{ text: turn.response }] },
+    ]);
+
     // We use gemini-2.5-flash as it is the most stable free-tier model in 2026
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash", 
-      contents: [{ text: input }],
+      model: "gemini-2.5-flash",
+      contents: [...historyContents, { role: "user", parts: [{ text: input }] }],
     });
 
     // Extract text directly from the response object
@@ -31,7 +36,6 @@ export async function runChat(input) {
     }
 
     return text;
-
   } catch (error) {
     throw toUserFacingError(error);
   }
@@ -47,13 +51,15 @@ const toUserFacingError = (error) => {
   // Handle Quota Issues (429)
   if (code === 429 || message.includes("quota") || message.includes("429")) {
     return new Error(
-      "Limit reached. Please check if your project is linked to a billing account in AI Studio to unlock the daily free tier quota."
+      "Limit reached. Please check if your project is linked to a billing account in AI Studio to unlock the daily free tier quota.",
     );
   }
 
   // Handle Invalid Model/Version (404)
   if (code === 404) {
-    return new Error("Model not found. Please ensure you are using a supported model like gemini-2.5-flash.");
+    return new Error(
+      "Model not found. Please ensure you are using a supported model like gemini-2.5-flash.",
+    );
   }
 
   return error instanceof Error ? error : new Error("Failed to connect to Gemini.");

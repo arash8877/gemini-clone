@@ -1,19 +1,34 @@
 import "./Main.css";
-import { useContext } from "react";
+import { Fragment, useContext, useEffect, useRef } from "react";
 import { assets } from "../../assets/assets";
 import { Context } from "../../context/Context";
 
 const Main = () => {
   const {
     onSent,
-    recentPrompt,
+    activeTurns,
+    pendingPrompt,
     showResult,
     loading,
-    resultData,
     setInput,
     input,
     retrySecondsLeft,
   } = useContext(Context);
+
+  const resultContainerRef = useRef(null);
+
+  useEffect(() => {
+    if (!showResult || !resultContainerRef.current) return;
+
+    const frameId = requestAnimationFrame(() => {
+      resultContainerRef.current.scrollTo({
+        top: resultContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    });
+
+    return () => cancelAnimationFrame(frameId);
+  }, [activeTurns, pendingPrompt, loading, showResult]);
 
   return (
     <div className="main">
@@ -52,25 +67,40 @@ const Main = () => {
             </div>
           </>
         ) : (
-          <div className="result">
-            <div className="result-title">
-              <div className="user-icon-container">
-                <img className="user-icon" src={assets.user_icon} alt="user-icon" />
-              </div>
-              <p>{recentPrompt}</p>
-            </div>
-            <div className="result-data">
-              <img src={assets.gemini_icon} alt="gemini-icon" />
-              {loading ? (
-                <div className="loader">
-                  <hr />
-                  <hr />
-                  <hr />
+          <div className="result" ref={resultContainerRef}>
+            {activeTurns.map((turn, index) => (
+              <Fragment key={`${turn.prompt}-${index}`}>
+                <div className="result-title">
+                  <div className="user-icon-container">
+                    <img className="user-icon" src={assets.user_icon} alt="user-icon" />
+                  </div>
+                  <p>{turn.prompt}</p>
                 </div>
-              ) : (
-                <p dangerouslySetInnerHTML={{ __html: resultData }}></p>
-              )}
-            </div>
+                <div className="result-data">
+                  <img src={assets.gemini_icon} alt="gemini-icon" />
+                  <p dangerouslySetInnerHTML={{ __html: turn.response }}></p>
+                </div>
+              </Fragment>
+            ))}
+
+            {loading && pendingPrompt ? (
+              <>
+                <div className="result-title">
+                  <div className="user-icon-container">
+                    <img className="user-icon" src={assets.user_icon} alt="user-icon" />
+                  </div>
+                  <p>{pendingPrompt}</p>
+                </div>
+                <div className="result-data">
+                  <img src={assets.gemini_icon} alt="gemini-icon" />
+                  <div className="loader">
+                    <hr />
+                    <hr />
+                    <hr />
+                  </div>
+                </div>
+              </>
+            ) : null}
           </div>
         )}
 
