@@ -4,8 +4,16 @@ import { assets } from "../../assets/assets";
 import { Context } from "../../context/Context";
 
 const Main = () => {
-  const { onSent, recentPrompt, showResult, loading, resultData, setInput, input } =
-    useContext(Context);
+  const {
+    onSent,
+    recentPrompt,
+    showResult,
+    loading,
+    resultData,
+    setInput,
+    input,
+    retrySecondsLeft,
+  } = useContext(Context);
 
   return (
     <div className="main">
@@ -70,6 +78,12 @@ const Main = () => {
           <div className="search-box">
             <input
               onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && input.trim() && retrySecondsLeft === 0) {
+                  e.preventDefault();
+                  onSent();
+                }
+              }}
               value={input}
               type="text"
               placeholder="Enter a prompt"
@@ -78,13 +92,22 @@ const Main = () => {
               <img src={assets.gallery_icon} alt="gallery-icon" />
               <img src={assets.mic_icon} alt="mic-icon" />
               {input ? (
-                <img onClick={() => onSent()} src={assets.send_icon} alt="send-icon" />
+                <img
+                  onClick={retrySecondsLeft === 0 ? () => onSent() : undefined}
+                  src={assets.send_icon}
+                  alt="send-icon"
+                  style={{
+                    opacity: retrySecondsLeft > 0 ? 0.5 : 1,
+                    cursor: retrySecondsLeft > 0 ? "not-allowed" : "pointer",
+                  }}
+                />
               ) : null}
             </div>
           </div>
           <p className="bottom-info">
-            Gemini may give inaccurate information, so double-check responses. Your feedback makes
-            Gemini Apps more helpful and safe.
+            {retrySecondsLeft > 0
+              ? `Rate limit reached. Please wait ${retrySecondsLeft}s before retrying.`
+              : "Gemini may give inaccurate information, so double-check responses. Your feedback makes Gemini Apps more helpful and safe."}
           </p>
         </div>
       </div>
